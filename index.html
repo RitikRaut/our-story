@@ -31,7 +31,10 @@
 
     body {
       font-family: 'Nunito', sans-serif;
-      background-color: var(--cream);
+      background:
+        radial-gradient(ellipse at 12% 8%,  rgba(245,214,223,0.28) 0%, transparent 50%),
+        radial-gradient(ellipse at 88% 92%, rgba(201,168,76,0.12)  0%, transparent 50%),
+        radial-gradient(ellipse at 50% 50%, rgba(253,248,240,1)    0%, #F7EFE5 100%);
       color: var(--text-dark);
       overflow-x: hidden;
     }
@@ -389,21 +392,33 @@
     .story-block { margin-bottom: 8px; }
 
     .story-card {
-      background: var(--white);
-      border-left: 3px solid var(--gold);
+      background: linear-gradient(135deg, var(--white) 0%, rgba(253,248,240,0.55) 100%);
+      border-left: none;
       border-radius: 0 20px 20px 0;
       padding: 34px 38px;
       box-shadow:
         0 2px 8px rgba(0,0,0,0.04),
-        0 8px 32px rgba(0,0,0,0.06);
-      transition: box-shadow 0.3s ease, transform 0.3s ease;
+        0 8px 32px rgba(0,0,0,0.06),
+        inset 0 1px 0 rgba(255,255,255,0.8);
+      transition: box-shadow 0.35s ease, transform 0.35s ease;
+      position: relative;
+    }
+
+    .story-card::before {
+      content: '';
+      position: absolute;
+      left: 0; top: 0; bottom: 0;
+      width: 3px;
+      border-radius: 3px 0 0 3px;
+      background: linear-gradient(180deg, var(--gold-light) 0%, var(--deep-rose) 50%, var(--gold) 100%);
     }
 
     .story-card:hover {
       box-shadow:
-        0 4px 16px rgba(0,0,0,0.06),
-        0 12px 40px rgba(0,0,0,0.09);
-      transform: translateX(4px);
+        0 4px 18px rgba(0,0,0,0.07),
+        0 14px 44px rgba(201,168,76,0.10),
+        inset 0 1px 0 rgba(255,255,255,0.9);
+      transform: translateX(6px);
     }
 
     .para-chapter {
@@ -534,6 +549,187 @@
       .carousel-container { gap: 10px; }
       .surprise-btn    { padding: 16px 36px; }
     }
+
+    /* ── Header glow ────────────────────────────────────────────────── */
+    .site-header { position: relative; }
+
+    .site-header::before {
+      content: '';
+      position: absolute;
+      top: 40%;
+      left: 50%;
+      transform: translate(-50%, -50%);
+      width: 340px;
+      height: 180px;
+      background: radial-gradient(ellipse, rgba(245,214,223,0.45) 0%, transparent 70%);
+      pointer-events: none;
+      z-index: 0;
+    }
+
+    .site-header > * { position: relative; z-index: 1; }
+
+    .header-title {
+      text-shadow: 0 2px 24px rgba(201,168,76,0.18);
+    }
+
+    /* ── Ambient petal rain ─────────────────────────────────────────── */
+    .petal-bg {
+      position: fixed;
+      inset: 0;
+      pointer-events: none;
+      z-index: 0;
+      overflow: hidden;
+    }
+
+    .petal-bg i {
+      position: absolute;
+      bottom: -20px;
+      display: block;
+      border-radius: 50% 8% 50% 8%;
+      opacity: 0;
+      animation: petalRise linear infinite;
+    }
+
+    @keyframes petalRise {
+      0%   { opacity: 0;    transform: translateY(0)       rotate(0deg)   translateX(0); }
+      8%   { opacity: 0.55; }
+      92%  { opacity: 0.35; }
+      100% { opacity: 0;    transform: translateY(-108vh)  rotate(700deg) translateX(45px); }
+    }
+
+    /* ── Forgive modal ──────────────────────────────────────────────── */
+    .forgive-overlay {
+      position: fixed;
+      inset: 0;
+      z-index: 9000;
+      background: rgba(61,43,31,0.52);
+      backdrop-filter: blur(12px);
+      -webkit-backdrop-filter: blur(12px);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      opacity: 0;
+      visibility: hidden;
+      transition: opacity 0.4s ease, visibility 0.4s ease;
+    }
+
+    .forgive-overlay.open {
+      opacity: 1;
+      visibility: visible;
+    }
+
+    .forgive-modal {
+      background: linear-gradient(155deg, #FFFAF4 0%, #FEF0F4 100%);
+      border: 1px solid rgba(201,168,76,0.22);
+      border-radius: 30px;
+      padding: 52px 44px 46px;
+      max-width: min(430px, 88vw);
+      width: 100%;
+      text-align: center;
+      box-shadow:
+        0 8px 32px rgba(0,0,0,0.13),
+        0 32px 80px rgba(0,0,0,0.18),
+        inset 0 1px 0 rgba(255,255,255,0.9);
+      transform: scale(0.80) translateY(28px);
+      transition: transform 0.48s cubic-bezier(0.34, 1.56, 0.64, 1);
+    }
+
+    .forgive-overlay.open .forgive-modal {
+      transform: scale(1) translateY(0);
+    }
+
+    .forgive-question {
+      font-family: 'Playfair Display', serif;
+      font-size: clamp(1.55rem, 5vw, 2.1rem);
+      font-weight: 700;
+      color: var(--text-dark);
+      line-height: 1.28;
+      margin-bottom: 10px;
+    }
+
+    .forgive-question em {
+      font-style: italic;
+      color: var(--deep-rose);
+    }
+
+    .forgive-sub {
+      font-size: 0.9rem;
+      color: var(--text-light);
+      font-style: italic;
+      line-height: 1.65;
+      margin-bottom: 36px;
+    }
+
+    .forgive-yes {
+      display: inline-block;
+      padding: 17px 52px;
+      background: linear-gradient(135deg, var(--deep-rose) 0%, #D4809A 50%, var(--dusty-pink) 100%);
+      color: var(--white);
+      font-family: 'Playfair Display', serif;
+      font-size: 1.12rem;
+      font-style: italic;
+      letter-spacing: 0.03em;
+      border: none;
+      border-radius: 50px;
+      cursor: pointer;
+      box-shadow:
+        0 4px 22px rgba(201,139,160,0.50),
+        0 8px 40px rgba(201,139,160,0.24);
+      transition: transform 0.3s cubic-bezier(0.34, 1.56, 0.64, 1),
+                  box-shadow 0.3s ease;
+    }
+
+    .forgive-yes:hover {
+      transform: translateY(-4px) scale(1.06);
+      box-shadow:
+        0 8px 32px rgba(201,139,160,0.60),
+        0 16px 56px rgba(201,139,160,0.30);
+    }
+
+    .forgive-yes:active { transform: scale(0.96); }
+
+    /* No button — position:fixed so it can roam the full viewport */
+    .forgive-no {
+      position: fixed;
+      padding: 12px 28px;
+      background: rgba(253,248,240,0.88);
+      backdrop-filter: blur(4px);
+      color: var(--text-light);
+      font-family: 'Nunito', sans-serif;
+      font-size: 0.9rem;
+      border: 1.5px solid rgba(155,123,110,0.28);
+      border-radius: 50px;
+      cursor: pointer;
+      z-index: 9002;
+      white-space: nowrap;
+      box-shadow: 0 2px 12px rgba(0,0,0,0.06);
+      transition: border-color 0.2s ease;
+      display: none;
+    }
+
+    /* ── Sweet message animation ────────────────────────────────────── */
+    @keyframes sweetFly {
+      0%   { opacity: 0; transform: translate(-50%, -35%) scale(0.8); }
+      18%  { opacity: 1; transform: translate(-50%, -50%) scale(1);   }
+      78%  { opacity: 1; transform: translate(-50%, -50%) scale(1);   }
+      100% { opacity: 0; transform: translate(-50%, -65%) scale(0.95);}
+    }
+
+    .sweet-msg {
+      position: fixed;
+      top: 50%;
+      left: 50%;
+      font-family: 'Playfair Display', serif;
+      font-size: clamp(1.9rem, 6vw, 3rem);
+      font-style: italic;
+      color: var(--deep-rose);
+      text-align: center;
+      z-index: 9500;
+      pointer-events: none;
+      animation: sweetFly 3.4s ease forwards;
+      text-shadow: 0 4px 24px rgba(201,139,160,0.45);
+      line-height: 1.3;
+    }
   </style>
 </head>
 <body>
@@ -541,6 +737,9 @@
 <!-- ═══════════════════════════════════════════════════════════════════
      INTRO OVERLAY
 ═══════════════════════════════════════════════════════════════════ -->
+<!-- Ambient floating petal rain (behind everything) -->
+<div class="petal-bg" id="petal-bg" aria-hidden="true"></div>
+
 <div id="intro-overlay" role="button" aria-label="Tap to begin" tabindex="0">
   <div class="intro-center">
 
@@ -896,6 +1095,42 @@
 
 </div><!-- /main-content -->
 
+<!-- ── Forgive Modal ──────────────────────────────────────────────── -->
+<div class="forgive-overlay" id="forgive-overlay" role="dialog" aria-modal="true" aria-labelledby="forgive-q">
+  <div class="forgive-modal">
+
+    <!-- Mini rose -->
+    <div style="margin-bottom:20px;" aria-hidden="true">
+      <svg width="52" height="52" viewBox="0 0 52 52" fill="none" xmlns="http://www.w3.org/2000/svg">
+        <g transform="translate(26,20)">
+          <path d="M0,0 C-5,-6 -6,-15 0,-18 C6,-15 5,-6 0,0Z" fill="rgba(245,214,223,0.6)" stroke="#C9A84C" stroke-width="1.2" transform="rotate(0)"/>
+          <path d="M0,0 C-5,-6 -6,-15 0,-18 C6,-15 5,-6 0,0Z" fill="rgba(245,214,223,0.6)" stroke="#C9A84C" stroke-width="1.2" transform="rotate(72)"/>
+          <path d="M0,0 C-5,-6 -6,-15 0,-18 C6,-15 5,-6 0,0Z" fill="rgba(245,214,223,0.6)" stroke="#C9A84C" stroke-width="1.2" transform="rotate(144)"/>
+          <path d="M0,0 C-5,-6 -6,-15 0,-18 C6,-15 5,-6 0,0Z" fill="rgba(245,214,223,0.6)" stroke="#C9A84C" stroke-width="1.2" transform="rotate(216)"/>
+          <path d="M0,0 C-5,-6 -6,-15 0,-18 C6,-15 5,-6 0,0Z" fill="rgba(245,214,223,0.6)" stroke="#C9A84C" stroke-width="1.2" transform="rotate(288)"/>
+          <circle cx="0" cy="-12" r="2.5" fill="rgba(201,168,76,0.55)" stroke="#C9A84C" stroke-width="0.9"/>
+        </g>
+        <path d="M26 28 Q25 38 26 48" stroke="#C9A84C" stroke-width="1.6" stroke-linecap="round"/>
+        <path d="M25 38 C21 32 14 31 11 35 C14 41 21 42 25 38Z" fill="rgba(201,168,76,0.1)" stroke="#C9A84C" stroke-width="1"/>
+        <path d="M27 43 C31 37 38 36 41 40 C38 46 31 47 27 43Z" fill="rgba(201,168,76,0.1)" stroke="#C9A84C" stroke-width="1"/>
+        <circle cx="6"  cy="10" r="1.3" fill="#E6C76A" opacity="0.7"/>
+        <circle cx="46" cy="8"  r="1.3" fill="#E6C76A" opacity="0.7"/>
+        <circle cx="2"  cy="24" r="1"   fill="#E6C76A" opacity="0.5"/>
+        <circle cx="50" cy="22" r="1"   fill="#E6C76A" opacity="0.5"/>
+      </svg>
+    </div>
+
+    <h2 class="forgive-question" id="forgive-q">
+      Kya tum mujhe <br><em>maaf karogi?</em>
+    </h2>
+    <p class="forgive-sub">Dil se maafi maang raha hoon ♡</p>
+
+    <button class="forgive-yes" id="forgive-yes">Haan, maaf kiya ♡</button>
+  </div>
+</div>
+
+<!-- No button lives as a direct body child so position:fixed roams freely -->
+<button class="forgive-no" id="forgive-no" aria-label="No">Nahi 😤</button>
 
 <!-- ═══════════════════════════════════════════════════════════════════
      JAVASCRIPT
@@ -1232,7 +1467,7 @@
   }
 
   surpriseBtn.addEventListener('click', () => {
-    active ? stopConfetti() : startConfetti();
+    if (window._openForgiveModal) window._openForgiveModal();
   });
 
   /* ════════════════════════════════════════════════════════════════
@@ -1323,6 +1558,115 @@
     }, { passive: true });
 
     startAuto();
+  }());
+
+  /* ════════════════════════════════════════════════════════════════
+     5.  FORGIVE MODAL  — "Do you forgive me?"
+  ════════════════════════════════════════════════════════════════ */
+  (function () {
+    const fOverlay = document.getElementById('forgive-overlay');
+    const yesBtn   = document.getElementById('forgive-yes');
+    const noBtn    = document.getElementById('forgive-no');
+    if (!fOverlay || !yesBtn || !noBtn) return;
+
+    let isOpen  = false;
+    let escapes = 0;
+
+    const noCopy = [
+      'Nahi 😤', 'Bilkul nahi! 😂', 'Kyu maaf karu? 😏',
+      'Nahi hoga 🤣', 'Pakad lo agar kar sako 😜',
+      'Choro mujhe! 😩', 'Main bhag raha hoon 🏃‍♂️',
+    ];
+
+    function placeNoDefault() {
+      const vw = window.innerWidth;
+      const vh = window.innerHeight;
+      noBtn.style.left = Math.round(vw / 2 + 70)  + 'px';
+      noBtn.style.top  = Math.round(vh / 2 + 90)  + 'px';
+    }
+
+    function runAway() {
+      const pad  = 70;
+      const btnW = noBtn.offsetWidth  || 110;
+      const btnH = noBtn.offsetHeight || 44;
+      const maxX = window.innerWidth  - btnW - pad;
+      const maxY = window.innerHeight - btnH - pad;
+      noBtn.style.left = Math.round(pad + Math.random() * maxX) + 'px';
+      noBtn.style.top  = Math.round(pad + Math.random() * maxY) + 'px';
+      noBtn.textContent = noCopy[Math.min(escapes, noCopy.length - 1)];
+      escapes++;
+    }
+
+    function openModal() {
+      if (isOpen) return;
+      isOpen  = true;
+      escapes = 0;
+      noBtn.textContent = noCopy[0];
+      noBtn.style.display = 'block';
+      placeNoDefault();
+      fOverlay.classList.add('open');
+    }
+
+    function closeModal() {
+      fOverlay.classList.remove('open');
+      noBtn.style.display = 'none';
+      isOpen = false;
+    }
+
+    window._openForgiveModal = openModal;
+
+    /* Desktop: run away when cursor gets within 110 px */
+    document.addEventListener('mousemove', e => {
+      if (!isOpen) return;
+      const r  = noBtn.getBoundingClientRect();
+      const dx = e.clientX - (r.left + r.width  / 2);
+      const dy = e.clientY - (r.top  + r.height / 2);
+      if (Math.hypot(dx, dy) < 110) runAway();
+    });
+
+    /* Mobile: run away on touchstart */
+    noBtn.addEventListener('touchstart', e => {
+      e.preventDefault();
+      runAway();
+    }, { passive: false });
+
+    /* Yes → confetti + sweet message */
+    yesBtn.addEventListener('click', () => {
+      closeModal();
+      startConfetti();
+      const msg = document.createElement('div');
+      msg.className = 'sweet-msg';
+      msg.innerHTML = 'Mujhe pata tha ♡<br><span style="font-size:0.55em;opacity:0.75;">Ab aur nahi bhagoge 😊</span>';
+      document.body.appendChild(msg);
+      setTimeout(() => msg.remove(), 3600);
+    });
+  }());
+
+  /* ════════════════════════════════════════════════════════════════
+     6.  AMBIENT PETAL RAIN
+  ════════════════════════════════════════════════════════════════ */
+  (function () {
+    const bg = document.getElementById('petal-bg');
+    if (!bg) return;
+    const cols = [
+      'rgba(245,214,223,0.55)', 'rgba(232,180,192,0.45)',
+      'rgba(201,139,160,0.35)', 'rgba(245,230,184,0.42)',
+      'rgba(238,201,210,0.50)',
+    ];
+    for (let i = 0; i < 16; i++) {
+      const el   = document.createElement('i');
+      const size = 6 + Math.random() * 10;
+      el.style.cssText = [
+        'left:'                  + Math.round(Math.random() * 100) + '%',
+        'width:'                 + size.toFixed(1) + 'px',
+        'height:'                + (size * 1.45).toFixed(1) + 'px',
+        'background:'            + cols[Math.floor(Math.random() * cols.length)],
+        'animation-duration:'   + (11 + Math.random() * 20).toFixed(1) + 's',
+        'animation-delay:'      + (-Math.random() * 22).toFixed(1) + 's',
+        'transform:rotate('     + Math.round(Math.random() * 360) + 'deg)',
+      ].join(';');
+      bg.appendChild(el);
+    }
   }());
 
 })();
