@@ -1046,11 +1046,11 @@
     } catch (_) { /* silently skip if Web Audio unavailable */ }
   }
 
-  /* ── Background music — hidden YouTube embed (Dandelions · Ruth B) ── */
+  /* ── Background music — SoundCloud (Dandelions · Ruth B, no ads) ── */
   function startBgMusic() {
     const f = document.createElement('iframe');
-    f.src = 'https://www.youtube.com/embed/MtlfQyzvqMQ?autoplay=1&loop=1&playlist=MtlfQyzvqMQ&controls=0&disablekb=1&fs=0&modestbranding=1';
-    f.allow = 'autoplay; encrypted-media';
+    f.src = 'https://w.soundcloud.com/player/?url=https%3A//soundcloud.com/ruthbofficial/dandelions&auto_play=true&hide_related=true&show_comments=false&show_user=false&show_reposts=false&show_teaser=false&visual=false';
+    f.allow = 'autoplay';
     f.style.cssText = 'position:fixed;width:1px;height:1px;bottom:0;left:0;opacity:0;pointer-events:none;border:0;';
     document.body.appendChild(f);
   }
