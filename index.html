@@ -185,34 +185,6 @@
       background: linear-gradient(90deg, var(--gold), transparent);
     }
 
-    /* ── Music Section ──────────────────────────────────────────────── */
-    .music-section {
-      display: flex;
-      flex-direction: column;
-      align-items: center;
-      gap: 14px;
-      padding: 12px 0 56px;
-    }
-
-    .music-label {
-      font-family: 'Playfair Display', serif;
-      font-style: italic;
-      font-size: 0.95rem;
-      color: var(--text-light);
-      letter-spacing: 0.1em;
-    }
-
-    .music-player-wrap {
-      width: 100%;
-      max-width: 400px;
-      border-radius: 18px;
-      overflow: hidden;
-      box-shadow:
-        0 4px 16px rgba(201,168,76,0.12),
-        0 12px 40px rgba(0,0,0,0.08);
-    }
-
-    .music-player-wrap iframe { display: block; }
 
     /* ── Photo Carousel ─────────────────────────────────────────────── */
     .carousel-section {
@@ -572,36 +544,67 @@
 <div id="intro-overlay" role="button" aria-label="Tap to begin" tabindex="0">
   <div class="intro-center">
 
-    <!-- Gold seed/sprout SVG -->
-    <svg class="intro-sprout" width="80" height="80" viewBox="0 0 80 80"
+    <!-- Rose SVG -->
+    <svg class="intro-sprout" width="160" height="210" viewBox="0 0 160 210"
          fill="none" xmlns="http://www.w3.org/2000/svg" aria-hidden="true">
-      <!-- Main stem -->
-      <path d="M40 68 Q40 50 40 28" stroke="#C9A84C" stroke-width="1.6" stroke-linecap="round"/>
+
+      <!-- Sparkles -->
+      <circle cx="20"  cy="42" r="2.2" fill="#E6C76A" opacity="0.75"/>
+      <circle cx="140" cy="34" r="2.2" fill="#E6C76A" opacity="0.75"/>
+      <circle cx="8"   cy="84" r="1.6" fill="#E6C76A" opacity="0.55"/>
+      <circle cx="152" cy="76" r="1.6" fill="#E6C76A" opacity="0.55"/>
+      <circle cx="46"  cy="6"  r="1.4" fill="#E6C76A" opacity="0.5"/>
+      <circle cx="114" cy="4"  r="1.4" fill="#E6C76A" opacity="0.5"/>
+      <circle cx="4"   cy="120" r="1.2" fill="#E6C76A" opacity="0.4"/>
+      <circle cx="156" cy="112" r="1.2" fill="#E6C76A" opacity="0.4"/>
+
+      <!-- Rose bloom centred at (80, 65) -->
+      <g transform="translate(80,65)">
+        <!-- Outer petals — 6 petals, 60° spacing, 55 px reach -->
+        <path d="M0,0 C-16,-20 -18,-46 0,-56 C18,-46 16,-20 0,0Z" fill="rgba(245,214,223,0.35)" stroke="#C9A84C" stroke-width="1.5" transform="rotate(0)"/>
+        <path d="M0,0 C-16,-20 -18,-46 0,-56 C18,-46 16,-20 0,0Z" fill="rgba(245,214,223,0.35)" stroke="#C9A84C" stroke-width="1.5" transform="rotate(60)"/>
+        <path d="M0,0 C-16,-20 -18,-46 0,-56 C18,-46 16,-20 0,0Z" fill="rgba(245,214,223,0.35)" stroke="#C9A84C" stroke-width="1.5" transform="rotate(120)"/>
+        <path d="M0,0 C-16,-20 -18,-46 0,-56 C18,-46 16,-20 0,0Z" fill="rgba(245,214,223,0.35)" stroke="#C9A84C" stroke-width="1.5" transform="rotate(180)"/>
+        <path d="M0,0 C-16,-20 -18,-46 0,-56 C18,-46 16,-20 0,0Z" fill="rgba(245,214,223,0.35)" stroke="#C9A84C" stroke-width="1.5" transform="rotate(240)"/>
+        <path d="M0,0 C-16,-20 -18,-46 0,-56 C18,-46 16,-20 0,0Z" fill="rgba(245,214,223,0.35)" stroke="#C9A84C" stroke-width="1.5" transform="rotate(300)"/>
+        <!-- Middle petals — 5 petals, 38 px reach, offset 30° -->
+        <path d="M0,0 C-11,-14 -12,-33 0,-41 C12,-33 11,-14 0,0Z" fill="rgba(232,180,192,0.5)" stroke="#C9A84C" stroke-width="1.35" transform="rotate(30)"/>
+        <path d="M0,0 C-11,-14 -12,-33 0,-41 C12,-33 11,-14 0,0Z" fill="rgba(232,180,192,0.5)" stroke="#C9A84C" stroke-width="1.35" transform="rotate(102)"/>
+        <path d="M0,0 C-11,-14 -12,-33 0,-41 C12,-33 11,-14 0,0Z" fill="rgba(232,180,192,0.5)" stroke="#C9A84C" stroke-width="1.35" transform="rotate(174)"/>
+        <path d="M0,0 C-11,-14 -12,-33 0,-41 C12,-33 11,-14 0,0Z" fill="rgba(232,180,192,0.5)" stroke="#C9A84C" stroke-width="1.35" transform="rotate(246)"/>
+        <path d="M0,0 C-11,-14 -12,-33 0,-41 C12,-33 11,-14 0,0Z" fill="rgba(232,180,192,0.5)" stroke="#C9A84C" stroke-width="1.35" transform="rotate(318)"/>
+        <!-- Inner petals — 4 petals, 24 px reach, offset 15° -->
+        <path d="M0,0 C-7,-9 -8,-21 0,-26 C8,-21 7,-9 0,0Z" fill="rgba(201,140,160,0.6)" stroke="#C9A84C" stroke-width="1.2" transform="rotate(15)"/>
+        <path d="M0,0 C-7,-9 -8,-21 0,-26 C8,-21 7,-9 0,0Z" fill="rgba(201,140,160,0.6)" stroke="#C9A84C" stroke-width="1.2" transform="rotate(105)"/>
+        <path d="M0,0 C-7,-9 -8,-21 0,-26 C8,-21 7,-9 0,0Z" fill="rgba(201,140,160,0.6)" stroke="#C9A84C" stroke-width="1.2" transform="rotate(195)"/>
+        <path d="M0,0 C-7,-9 -8,-21 0,-26 C8,-21 7,-9 0,0Z" fill="rgba(201,140,160,0.6)" stroke="#C9A84C" stroke-width="1.2" transform="rotate(285)"/>
+        <!-- Centre spiral -->
+        <path d="M3,-18 C5,-11 5,-5 3,0 C1,4 -2,2 -2,-3 C-2,-10 0,-16 3,-18Z"
+              fill="rgba(201,168,76,0.5)" stroke="#C9A84C" stroke-width="1.1"/>
+        <!-- Centre dot -->
+        <circle cx="0" cy="-14" r="4.5" fill="rgba(201,168,76,0.45)" stroke="#C9A84C" stroke-width="1.2"/>
+        <circle cx="0" cy="-14" r="2"   fill="#C9A84C" opacity="0.7"/>
+      </g>
+
+      <!-- Sepals at base of bloom -->
+      <path d="M74 106 Q68 118 66 130" stroke="#C9A84C" stroke-width="1.3" stroke-linecap="round" opacity="0.7"/>
+      <path d="M86 106 Q92 118 94 130" stroke="#C9A84C" stroke-width="1.3" stroke-linecap="round" opacity="0.7"/>
+
+      <!-- Stem -->
+      <path d="M80 110 Q78 148 80 195" stroke="#C9A84C" stroke-width="2.3" stroke-linecap="round"/>
+
       <!-- Left leaf -->
-      <path d="M40 44 Q30 38 25 28 Q34 28 40 40" fill="none"
-            stroke="#C9A84C" stroke-width="1.4" stroke-linecap="round" stroke-linejoin="round"/>
+      <path d="M79 152 C64 136 44 132 38 143 C44 158 64 162 79 152Z"
+            fill="rgba(201,168,76,0.13)" stroke="#C9A84C" stroke-width="1.3"/>
+      <line x1="79" y1="152" x2="52" y2="140" stroke="#C9A84C" stroke-width="0.8" opacity="0.4"/>
+
       <!-- Right leaf -->
-      <path d="M40 36 Q50 30 55 20 Q46 20 40 32" fill="none"
-            stroke="#C9A84C" stroke-width="1.4" stroke-linecap="round" stroke-linejoin="round"/>
-      <!-- Seed bulb at base -->
-      <ellipse cx="40" cy="72" rx="5.5" ry="3.5" fill="none"
-               stroke="#C9A84C" stroke-width="1.3"/>
-      <!-- Bud at top -->
-      <path d="M40 28 Q37 21 40 16 Q43 21 40 28" fill="none"
-            stroke="#C9A84C" stroke-width="1.3"/>
-      <!-- Small roots -->
-      <path d="M38 74 Q34 78 30 76" stroke="#C9A84C" stroke-width="1" stroke-linecap="round" opacity="0.5"/>
-      <path d="M42 74 Q46 78 50 76" stroke="#C9A84C" stroke-width="1" stroke-linecap="round" opacity="0.5"/>
-      <!-- Sparkle dots -->
-      <circle cx="22" cy="26" r="1.8" fill="#E6C76A" opacity="0.75"/>
-      <circle cx="58" cy="20" r="1.8" fill="#E6C76A" opacity="0.75"/>
-      <circle cx="62" cy="40" r="1.2" fill="#E6C76A" opacity="0.5"/>
-      <circle cx="18" cy="48" r="1.2" fill="#E6C76A" opacity="0.5"/>
-      <circle cx="66" cy="58" r="1"   fill="#E6C76A" opacity="0.4"/>
-      <circle cx="14" cy="36" r="1"   fill="#E6C76A" opacity="0.4"/>
+      <path d="M81 170 C96 154 116 150 122 161 C116 176 96 180 81 170Z"
+            fill="rgba(201,168,76,0.13)" stroke="#C9A84C" stroke-width="1.3"/>
+      <line x1="81" y1="170" x2="108" y2="158" stroke="#C9A84C" stroke-width="0.8" opacity="0.4"/>
     </svg>
 
-    <p class="intro-text">Tap to water our love.</p>
+    <p class="intro-text">Tap to bloom our love.</p>
     <p class="intro-hint">touch anywhere</p>
   </div>
 </div>
@@ -633,39 +636,6 @@
 
   <div class="page-container">
 
-    <!-- ── Music Player ──────────────────────────────────────── -->
-    <section class="music-section" aria-label="Our soundtrack">
-      <p class="music-label">♪ &nbsp;our song</p>
-      <div class="music-player-wrap">
-
-        <!--
-          ┌──────────────────────────────────────────────────────────────┐
-          │  HOW TO REPLACE THE SPOTIFY PLAYER                          │
-          │                                                              │
-          │  1. Open Spotify desktop or web app.                        │
-          │  2. Navigate to your couple song (or a playlist).           │
-          │  3. Click the ··· menu → Share → Copy Embed Code.          │
-          │  4. From the copied <iframe>, grab the "src" URL.           │
-          │  5. Paste that URL to replace the src value below.          │
-          │                                                              │
-          │  Example src for a track:                                   │
-          │    https://open.spotify.com/embed/track/YOUR_TRACK_ID       │
-          │  Example src for a playlist:                                 │
-          │    https://open.spotify.com/embed/playlist/YOUR_PLAYLIST_ID │
-          └──────────────────────────────────────────────────────────────┘
-        -->
-        <iframe
-          src="https://open.spotify.com/embed/track/4iV5W9uYEdYUVa79Axb7Rh"
-          width="100%"
-          height="152"
-          frameBorder="0"
-          allowfullscreen=""
-          allow="autoplay; clipboard-write; encrypted-media; fullscreen; picture-in-picture"
-          loading="lazy"
-        ></iframe>
-
-      </div>
-    </section>
 
     <!-- ── Photo Carousel ───────────────────────────────────── -->
     <section class="carousel-section" aria-label="Our photos">
@@ -1025,9 +995,72 @@
     else bloomCanvas.style.display = 'none';
   }
 
+  /* ── Water + bloom sound (Web Audio API) ──────────────────────── */
+  function playWaterBloom() {
+    try {
+      const ctx = new (window.AudioContext || window.webkitAudioContext)();
+      const now = ctx.currentTime;
+
+      /* Water drops — 6 slightly staggered plop sounds */
+      [420, 520, 380, 610, 460, 340].forEach((freq, i) => {
+        const t   = now + i * 0.07;
+        const osc = ctx.createOscillator();
+        const env = ctx.createGain();
+        osc.type = 'sine';
+        osc.frequency.setValueAtTime(freq, t);
+        osc.frequency.exponentialRampToValueAtTime(freq * 0.45, t + 0.28);
+        env.gain.setValueAtTime(0, t);
+        env.gain.linearRampToValueAtTime(0.22, t + 0.02);
+        env.gain.exponentialRampToValueAtTime(0.001, t + 0.38);
+        osc.connect(env); env.connect(ctx.destination);
+        osc.start(t); osc.stop(t + 0.4);
+      });
+
+      /* Sparkle chime — ascending C-E-G-C arpeggio */
+      [523, 659, 784, 1047].forEach((freq, i) => {
+        const t   = now + 0.08 + i * 0.13;
+        const osc = ctx.createOscillator();
+        const env = ctx.createGain();
+        osc.type = 'triangle';
+        osc.frequency.value = freq;
+        env.gain.setValueAtTime(0, t);
+        env.gain.linearRampToValueAtTime(0.14, t + 0.04);
+        env.gain.exponentialRampToValueAtTime(0.001, t + 0.9);
+        osc.connect(env); env.connect(ctx.destination);
+        osc.start(t); osc.stop(t + 0.95);
+      });
+
+      /* Gentle water whoosh (filtered noise) */
+      const len  = Math.floor(ctx.sampleRate * 0.65);
+      const buf  = ctx.createBuffer(1, len, ctx.sampleRate);
+      const data = buf.getChannelData(0);
+      for (let i = 0; i < len; i++) data[i] = (Math.random() * 2 - 1) * 0.5;
+      const noise  = ctx.createBufferSource(); noise.buffer = buf;
+      const bpf    = ctx.createBiquadFilter();
+      bpf.type = 'bandpass'; bpf.frequency.value = 700; bpf.Q.value = 0.8;
+      const nGain  = ctx.createGain();
+      nGain.gain.setValueAtTime(0.09, now);
+      nGain.gain.exponentialRampToValueAtTime(0.001, now + 0.65);
+      noise.connect(bpf); bpf.connect(nGain); nGain.connect(ctx.destination);
+      noise.start(now); noise.stop(now + 0.7);
+    } catch (_) { /* silently skip if Web Audio unavailable */ }
+  }
+
+  /* ── Background music — hidden Spotify embed (Dandelions · Ruth B) ── */
+  function startBgMusic() {
+    const f = document.createElement('iframe');
+    f.src = 'https://open.spotify.com/embed/track/2eAvDnpXP5W0cVtiI0PUxV?autoplay=1&utm_source=generator';
+    f.allow = 'autoplay; encrypted-media';
+    f.style.cssText = 'position:fixed;width:1px;height:1px;bottom:0;left:0;opacity:0;pointer-events:none;border:0;';
+    document.body.appendChild(f);
+  }
+
   function triggerBloom() {
     if (bloomTriggered) return;
     bloomTriggered = true;
+
+    playWaterBloom();
+    startBgMusic();
 
     const cx = bloomCanvas.width  / 2;
     const cy = bloomCanvas.height / 2;
