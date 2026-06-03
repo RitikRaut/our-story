@@ -1,0 +1,999 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Our Little Universe</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400;0,600;0,700;1,400;1,600&family=Nunito:wght@300;400;500&display=swap" rel="stylesheet" />
+  <style>
+    /* ── Reset ──────────────────────────────────────────────────────── */
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+    /* ── Design Tokens ──────────────────────────────────────────────── */
+    :root {
+      --cream:      #FDF8F0;
+      --cream-dark: #F5EDE0;
+      --blush:      #F5D6DF;
+      --dusty-pink: #E8B4C0;
+      --deep-rose:  #C98BA0;
+      --gold:       #C9A84C;
+      --gold-light: #E6C76A;
+      --gold-pale:  #F5E6B8;
+      --text-dark:  #3D2B1F;
+      --text-mid:   #6B4A3E;
+      --text-light: #9B7B6E;
+      --white:      #FFFFFF;
+    }
+
+    html { scroll-behavior: smooth; }
+
+    body {
+      font-family: 'Nunito', sans-serif;
+      background-color: var(--cream);
+      color: var(--text-dark);
+      overflow-x: hidden;
+    }
+
+    /* ── Intro Overlay ──────────────────────────────────────────────── */
+    #intro-overlay {
+      position: fixed;
+      inset: 0;
+      z-index: 9999;
+      background: radial-gradient(ellipse at center, #FFFAF4 0%, var(--cream) 70%);
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      cursor: pointer;
+      user-select: none;
+      transition: opacity 0.9s cubic-bezier(0.4, 0, 0.2, 1),
+                  visibility 0.9s cubic-bezier(0.4, 0, 0.2, 1);
+    }
+
+    #intro-overlay.fade-out {
+      opacity: 0;
+      visibility: hidden;
+      pointer-events: none;
+    }
+
+    .intro-center {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: 24px;
+      animation: gentle-float 3.2s ease-in-out infinite;
+    }
+
+    @keyframes gentle-float {
+      0%, 100% { transform: translateY(0px); }
+      50%       { transform: translateY(-10px); }
+    }
+
+    .intro-sprout {
+      filter: drop-shadow(0 0 12px rgba(201, 168, 76, 0.35));
+      animation: gentle-glow 3.2s ease-in-out infinite;
+    }
+
+    @keyframes gentle-glow {
+      0%, 100% { filter: drop-shadow(0 0 8px rgba(201,168,76,0.25)); }
+      50%       { filter: drop-shadow(0 0 18px rgba(201,168,76,0.55)); }
+    }
+
+    .intro-text {
+      font-family: 'Playfair Display', serif;
+      font-style: italic;
+      font-size: clamp(1rem, 3.5vw, 1.25rem);
+      color: var(--text-light);
+      letter-spacing: 0.06em;
+    }
+
+    .intro-hint {
+      font-size: 0.75rem;
+      color: var(--gold);
+      letter-spacing: 0.2em;
+      text-transform: uppercase;
+      opacity: 0.7;
+      margin-top: -10px;
+      animation: blink 2s ease-in-out infinite;
+    }
+
+    @keyframes blink {
+      0%, 100% { opacity: 0.7; }
+      50%       { opacity: 0.25; }
+    }
+
+    /* ── Bloom Canvas ───────────────────────────────────────────────── */
+    #bloom-canvas {
+      position: fixed;
+      inset: 0;
+      z-index: 10000;
+      pointer-events: none;
+    }
+
+    /* ── Confetti Canvas ────────────────────────────────────────────── */
+    #confetti-canvas {
+      position: fixed;
+      inset: 0;
+      z-index: 9998;
+      pointer-events: none;
+      opacity: 0;
+      transition: opacity 0.4s ease;
+    }
+
+    /* ── Main Content ───────────────────────────────────────────────── */
+    #main-content {
+      opacity: 0;
+      transition: opacity 0.9s ease;
+    }
+
+    #main-content.visible { opacity: 1; }
+
+    /* ── Page Container ─────────────────────────────────────────────── */
+    .page-container {
+      max-width: 780px;
+      margin: 0 auto;
+      padding: 0 24px 80px;
+    }
+
+    /* ── Site Header ────────────────────────────────────────────────── */
+    .site-header {
+      text-align: center;
+      padding: 64px 24px 48px;
+    }
+
+    .header-eyebrow {
+      font-family: 'Playfair Display', serif;
+      font-style: italic;
+      font-size: clamp(0.8rem, 2vw, 0.95rem);
+      color: var(--gold);
+      letter-spacing: 0.2em;
+      text-transform: uppercase;
+      margin-bottom: 14px;
+    }
+
+    .header-title {
+      font-family: 'Playfair Display', serif;
+      font-size: clamp(2rem, 6.5vw, 3.6rem);
+      font-weight: 700;
+      color: var(--text-dark);
+      line-height: 1.18;
+      margin-bottom: 22px;
+    }
+
+    .header-title em {
+      font-style: italic;
+      color: var(--deep-rose);
+    }
+
+    .header-rule {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 14px;
+    }
+
+    .header-rule span {
+      display: block;
+      width: 64px;
+      height: 1px;
+      background: linear-gradient(90deg, transparent, var(--gold));
+    }
+
+    .header-rule span:last-child {
+      background: linear-gradient(90deg, var(--gold), transparent);
+    }
+
+    /* ── Music Section ──────────────────────────────────────────────── */
+    .music-section {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: 14px;
+      padding: 12px 0 56px;
+    }
+
+    .music-label {
+      font-family: 'Playfair Display', serif;
+      font-style: italic;
+      font-size: 0.95rem;
+      color: var(--text-light);
+      letter-spacing: 0.1em;
+    }
+
+    .music-player-wrap {
+      width: 100%;
+      max-width: 400px;
+      border-radius: 18px;
+      overflow: hidden;
+      box-shadow:
+        0 4px 16px rgba(201,168,76,0.12),
+        0 12px 40px rgba(0,0,0,0.08);
+    }
+
+    .music-player-wrap iframe { display: block; }
+
+    /* ── Polaroid Section ───────────────────────────────────────────── */
+    .polaroid-section {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      padding: 10px 0 64px;
+      gap: 0;
+    }
+
+    .polaroid-frame {
+      background: var(--white);
+      padding: 14px 14px 52px;
+      width: min(300px, 82vw);
+      box-shadow:
+        0 2px 8px  rgba(0,0,0,0.07),
+        0 12px 40px rgba(0,0,0,0.11),
+        0 32px 64px rgba(0,0,0,0.07);
+      transform: rotate(-2.8deg);
+      transition: transform 0.5s cubic-bezier(0.34, 1.56, 0.64, 1),
+                  box-shadow 0.5s ease;
+      cursor: default;
+    }
+
+    .polaroid-frame:hover {
+      transform: rotate(0deg) scale(1.03) translateY(-4px);
+      box-shadow:
+        0 4px 16px rgba(0,0,0,0.10),
+        0 20px 60px rgba(0,0,0,0.15),
+        0 40px 80px rgba(0,0,0,0.08);
+    }
+
+    .polaroid-img {
+      width: 100%;
+      aspect-ratio: 1 / 1;
+      overflow: hidden;
+      background: var(--blush);
+    }
+
+    .polaroid-img img {
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+      display: block;
+    }
+
+    .polaroid-caption {
+      font-family: 'Playfair Display', serif;
+      font-style: italic;
+      font-size: clamp(0.9rem, 2.5vw, 1rem);
+      color: var(--text-mid);
+      text-align: center;
+      margin-top: 14px;
+      line-height: 1.4;
+    }
+
+    /* ── Story Section ──────────────────────────────────────────────── */
+    .story-section { padding: 12px 0; }
+
+    /* Animate-in base state */
+    .story-block,
+    .svg-decorator,
+    .finale-section {
+      opacity: 0;
+      transform: translateY(44px);
+      transition: opacity 0.85s cubic-bezier(0.25, 0.46, 0.45, 0.94),
+                  transform 0.85s cubic-bezier(0.25, 0.46, 0.45, 0.94);
+    }
+
+    .story-block.in-view,
+    .svg-decorator.in-view,
+    .finale-section.in-view {
+      opacity: 1;
+      transform: translateY(0);
+    }
+
+    .story-block { margin-bottom: 8px; }
+
+    .story-card {
+      background: var(--white);
+      border-left: 3px solid var(--gold);
+      border-radius: 0 20px 20px 0;
+      padding: 34px 38px;
+      box-shadow:
+        0 2px 8px rgba(0,0,0,0.04),
+        0 8px 32px rgba(0,0,0,0.06);
+      transition: box-shadow 0.3s ease, transform 0.3s ease;
+    }
+
+    .story-card:hover {
+      box-shadow:
+        0 4px 16px rgba(0,0,0,0.06),
+        0 12px 40px rgba(0,0,0,0.09);
+      transform: translateX(4px);
+    }
+
+    .para-chapter {
+      font-family: 'Playfair Display', serif;
+      font-size: 0.72rem;
+      color: var(--gold);
+      letter-spacing: 0.25em;
+      text-transform: uppercase;
+      margin-bottom: 10px;
+    }
+
+    .story-card h3 {
+      font-family: 'Playfair Display', serif;
+      font-size: clamp(1.15rem, 3vw, 1.45rem);
+      color: var(--text-dark);
+      margin-bottom: 14px;
+      font-weight: 600;
+    }
+
+    .story-card p {
+      font-size: clamp(0.93rem, 2vw, 1.04rem);
+      line-height: 1.95;
+      color: var(--text-mid);
+      font-weight: 300;
+    }
+
+    /* SVG Decorators */
+    .svg-decorator {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      padding: 28px 0;
+    }
+
+    /* ── Finale Section ─────────────────────────────────────────────── */
+    .finale-section {
+      text-align: center;
+      padding: 68px 20px 52px;
+    }
+
+    .finale-title {
+      font-family: 'Playfair Display', serif;
+      font-size: clamp(1.7rem, 5.5vw, 2.75rem);
+      color: var(--text-dark);
+      line-height: 1.28;
+      margin-bottom: 22px;
+    }
+
+    .finale-title em {
+      font-style: italic;
+      color: var(--deep-rose);
+    }
+
+    .finale-body {
+      font-size: clamp(0.95rem, 2.2vw, 1.08rem);
+      color: var(--text-light);
+      line-height: 1.85;
+      max-width: 480px;
+      margin: 0 auto 44px;
+      font-weight: 300;
+    }
+
+    .surprise-btn {
+      display: inline-block;
+      padding: 18px 52px;
+      background: linear-gradient(135deg, var(--gold) 0%, var(--gold-light) 100%);
+      color: var(--white);
+      font-family: 'Playfair Display', serif;
+      font-size: clamp(1rem, 2.5vw, 1.15rem);
+      font-style: italic;
+      letter-spacing: 0.04em;
+      border: none;
+      border-radius: 50px;
+      cursor: pointer;
+      position: relative;
+      overflow: hidden;
+      box-shadow:
+        0 4px 20px rgba(201,168,76,0.38),
+        0 8px 40px rgba(201,168,76,0.18);
+      transition: transform 0.3s cubic-bezier(0.34, 1.56, 0.64, 1),
+                  box-shadow 0.3s ease;
+    }
+
+    .surprise-btn::after {
+      content: '';
+      position: absolute;
+      inset: 0;
+      background: linear-gradient(135deg, rgba(255,255,255,0.18) 0%, transparent 60%);
+      pointer-events: none;
+    }
+
+    .surprise-btn:hover {
+      transform: translateY(-4px) scale(1.04);
+      box-shadow:
+        0 8px 32px rgba(201,168,76,0.50),
+        0 16px 56px rgba(201,168,76,0.22);
+    }
+
+    .surprise-btn:active { transform: scale(0.97); }
+
+    /* ── Footer ─────────────────────────────────────────────────────── */
+    .site-footer {
+      text-align: center;
+      padding: 40px 24px 64px;
+      font-size: 0.82rem;
+      color: var(--text-light);
+      letter-spacing: 0.06em;
+    }
+
+    .heart-pulse {
+      display: inline-block;
+      color: var(--deep-rose);
+      animation: heartbeat 1.4s ease-in-out infinite;
+    }
+
+    @keyframes heartbeat {
+      0%, 100% { transform: scale(1); }
+      14%       { transform: scale(1.35); }
+      28%       { transform: scale(1); }
+      42%       { transform: scale(1.22); }
+      70%       { transform: scale(1); }
+    }
+
+    /* ── Responsive tweaks ──────────────────────────────────────────── */
+    @media (max-width: 480px) {
+      .story-card      { padding: 24px 22px; }
+      .polaroid-frame  { padding: 10px 10px 44px; }
+      .surprise-btn    { padding: 16px 36px; }
+    }
+  </style>
+</head>
+<body>
+
+<!-- ═══════════════════════════════════════════════════════════════════
+     INTRO OVERLAY
+═══════════════════════════════════════════════════════════════════ -->
+<div id="intro-overlay" role="button" aria-label="Tap to begin" tabindex="0">
+  <div class="intro-center">
+
+    <!-- Gold seed/sprout SVG -->
+    <svg class="intro-sprout" width="80" height="80" viewBox="0 0 80 80"
+         fill="none" xmlns="http://www.w3.org/2000/svg" aria-hidden="true">
+      <!-- Main stem -->
+      <path d="M40 68 Q40 50 40 28" stroke="#C9A84C" stroke-width="1.6" stroke-linecap="round"/>
+      <!-- Left leaf -->
+      <path d="M40 44 Q30 38 25 28 Q34 28 40 40" fill="none"
+            stroke="#C9A84C" stroke-width="1.4" stroke-linecap="round" stroke-linejoin="round"/>
+      <!-- Right leaf -->
+      <path d="M40 36 Q50 30 55 20 Q46 20 40 32" fill="none"
+            stroke="#C9A84C" stroke-width="1.4" stroke-linecap="round" stroke-linejoin="round"/>
+      <!-- Seed bulb at base -->
+      <ellipse cx="40" cy="72" rx="5.5" ry="3.5" fill="none"
+               stroke="#C9A84C" stroke-width="1.3"/>
+      <!-- Bud at top -->
+      <path d="M40 28 Q37 21 40 16 Q43 21 40 28" fill="none"
+            stroke="#C9A84C" stroke-width="1.3"/>
+      <!-- Small roots -->
+      <path d="M38 74 Q34 78 30 76" stroke="#C9A84C" stroke-width="1" stroke-linecap="round" opacity="0.5"/>
+      <path d="M42 74 Q46 78 50 76" stroke="#C9A84C" stroke-width="1" stroke-linecap="round" opacity="0.5"/>
+      <!-- Sparkle dots -->
+      <circle cx="22" cy="26" r="1.8" fill="#E6C76A" opacity="0.75"/>
+      <circle cx="58" cy="20" r="1.8" fill="#E6C76A" opacity="0.75"/>
+      <circle cx="62" cy="40" r="1.2" fill="#E6C76A" opacity="0.5"/>
+      <circle cx="18" cy="48" r="1.2" fill="#E6C76A" opacity="0.5"/>
+      <circle cx="66" cy="58" r="1"   fill="#E6C76A" opacity="0.4"/>
+      <circle cx="14" cy="36" r="1"   fill="#E6C76A" opacity="0.4"/>
+    </svg>
+
+    <p class="intro-text">Tap to water our love.</p>
+    <p class="intro-hint">touch anywhere</p>
+  </div>
+</div>
+
+<!-- Bloom particle canvas (sits above overlay during animation) -->
+<canvas id="bloom-canvas"></canvas>
+
+<!-- Heart confetti canvas (behind content, above page background) -->
+<canvas id="confetti-canvas"></canvas>
+
+<!-- ═══════════════════════════════════════════════════════════════════
+     MAIN CONTENT
+═══════════════════════════════════════════════════════════════════ -->
+<div id="main-content">
+
+  <!-- ── Header ─────────────────────────────────────────────── -->
+  <header class="site-header">
+    <p class="header-eyebrow">a love letter in pixels</p>
+    <h1 class="header-title">Our Little <em>Universe</em></h1>
+    <div class="header-rule">
+      <span></span>
+      <svg width="16" height="16" viewBox="0 0 16 16" fill="none">
+        <path d="M8 2 L9.4 6.2 L14 6.2 L10.3 8.8 L11.7 13 L8 10.4 L4.3 13 L5.7 8.8 L2 6.2 L6.6 6.2 Z"
+              fill="none" stroke="#C9A84C" stroke-width="1" stroke-linejoin="round"/>
+      </svg>
+      <span></span>
+    </div>
+  </header>
+
+  <div class="page-container">
+
+    <!-- ── Music Player ──────────────────────────────────────── -->
+    <section class="music-section" aria-label="Our soundtrack">
+      <p class="music-label">♪ &nbsp;our song</p>
+      <div class="music-player-wrap">
+
+        <!--
+          ┌──────────────────────────────────────────────────────────────┐
+          │  HOW TO REPLACE THE SPOTIFY PLAYER                          │
+          │                                                              │
+          │  1. Open Spotify desktop or web app.                        │
+          │  2. Navigate to your couple song (or a playlist).           │
+          │  3. Click the ··· menu → Share → Copy Embed Code.          │
+          │  4. From the copied <iframe>, grab the "src" URL.           │
+          │  5. Paste that URL to replace the src value below.          │
+          │                                                              │
+          │  Example src for a track:                                   │
+          │    https://open.spotify.com/embed/track/YOUR_TRACK_ID       │
+          │  Example src for a playlist:                                 │
+          │    https://open.spotify.com/embed/playlist/YOUR_PLAYLIST_ID │
+          └──────────────────────────────────────────────────────────────┘
+        -->
+        <iframe
+          src="https://open.spotify.com/embed/track/4iV5W9uYEdYUVa79Axb7Rh"
+          width="100%"
+          height="152"
+          frameBorder="0"
+          allowfullscreen=""
+          allow="autoplay; clipboard-write; encrypted-media; fullscreen; picture-in-picture"
+          loading="lazy"
+        ></iframe>
+
+      </div>
+    </section>
+
+    <!-- ── Polaroid Hero ─────────────────────────────────────── -->
+    <section class="polaroid-section" aria-label="Our photo">
+      <div class="polaroid-frame">
+        <div class="polaroid-img">
+          <!--
+            Replace the src below with your couple photo.
+            Local file:  src="photo.jpg"  (place photo.jpg next to index.html)
+            Remote URL:  src="https://…your-image-link…"
+          -->
+          <img
+            src="https://images.unsplash.com/photo-1518568403628-df54b5b85e4a?w=600&q=80"
+            alt="Us together"
+            loading="lazy"
+          />
+        </div>
+        <p class="polaroid-caption">you &amp; me, always ♡</p>
+      </div>
+    </section>
+
+    <!-- ── Story Paragraphs ──────────────────────────────────── -->
+    <section class="story-section" aria-label="Our story">
+
+      <!-- Paragraph 1 -->
+      <div class="story-block">
+        <div class="story-card">
+          <p class="para-chapter">Chapter I</p>
+          <h3>The Day Everything Changed</h3>
+          <p>
+            There are ordinary moments that somehow become extraordinary — a glance across a
+            crowded room, a laugh that sounds like a song you'd forgotten you knew. That was
+            the day I first saw you. The world hadn't changed, but the light inside it had
+            shifted, and I realised, quietly and completely, that nothing would ever quite
+            be the same again. Nor did I want it to be.
+          </p>
+        </div>
+      </div>
+
+      <!-- Decorator 1 — Gold line + diamond -->
+      <div class="svg-decorator" aria-hidden="true">
+        <svg width="240" height="24" viewBox="0 0 240 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+          <defs>
+            <linearGradient id="dg1a" x1="0" y1="0" x2="90" y2="0" gradientUnits="userSpaceOnUse">
+              <stop offset="0%"   stop-color="#C9A84C" stop-opacity="0"/>
+              <stop offset="100%" stop-color="#C9A84C" stop-opacity="0.65"/>
+            </linearGradient>
+            <linearGradient id="dg1b" x1="150" y1="0" x2="240" y2="0" gradientUnits="userSpaceOnUse">
+              <stop offset="0%"   stop-color="#C9A84C" stop-opacity="0.65"/>
+              <stop offset="100%" stop-color="#C9A84C" stop-opacity="0"/>
+            </linearGradient>
+          </defs>
+          <line x1="0"   y1="12" x2="96"  y2="12" stroke="url(#dg1a)" stroke-width="1"/>
+          <path d="M112 12 L120 4 L128 12 L120 20 Z"
+                fill="none" stroke="#C9A84C" stroke-width="1.2"/>
+          <circle cx="120" cy="12" r="2.2" fill="#C9A84C" opacity="0.35"/>
+          <line x1="144" y1="12" x2="240" y2="12" stroke="url(#dg1b)" stroke-width="1"/>
+        </svg>
+      </div>
+
+      <!-- Paragraph 2 -->
+      <div class="story-block">
+        <div class="story-card">
+          <p class="para-chapter">Chapter II</p>
+          <h3>Learning the Language of You</h3>
+          <p>
+            Love, I discovered, is its own quiet vocabulary. It's learning that you take your
+            coffee a certain way, that your laugh changes depending on what you find funny, that
+            your silences are as full of meaning as your words. Every small detail of you became
+            a treasure — a tiny private universe I felt honoured to explore, one careful,
+            joyful day at a time.
+          </p>
+        </div>
+      </div>
+
+      <!-- Decorator 2 — Gold line + star -->
+      <div class="svg-decorator" aria-hidden="true">
+        <svg width="260" height="32" viewBox="0 0 260 32" fill="none" xmlns="http://www.w3.org/2000/svg">
+          <defs>
+            <linearGradient id="dg2a" x1="0" y1="0" x2="96" y2="0" gradientUnits="userSpaceOnUse">
+              <stop offset="0%"   stop-color="#C9A84C" stop-opacity="0"/>
+              <stop offset="100%" stop-color="#C9A84C" stop-opacity="0.65"/>
+            </linearGradient>
+            <linearGradient id="dg2b" x1="164" y1="0" x2="260" y2="0" gradientUnits="userSpaceOnUse">
+              <stop offset="0%"   stop-color="#C9A84C" stop-opacity="0.65"/>
+              <stop offset="100%" stop-color="#C9A84C" stop-opacity="0"/>
+            </linearGradient>
+          </defs>
+          <line x1="0"   y1="16" x2="100" y2="16" stroke="url(#dg2a)" stroke-width="1"/>
+          <!-- 5-point star -->
+          <path d="M130 5 L132.4 12.2 L140 12.2 L133.8 16.7 L136.2 23.9 L130 19.4 L123.8 23.9 L126.2 16.7 L120 12.2 L127.6 12.2 Z"
+                fill="none" stroke="#C9A84C" stroke-width="1.15" stroke-linejoin="round"/>
+          <line x1="160" y1="16" x2="260" y2="16" stroke="url(#dg2b)" stroke-width="1"/>
+        </svg>
+      </div>
+
+      <!-- Paragraph 3 -->
+      <div class="story-block">
+        <div class="story-card">
+          <p class="para-chapter">Chapter III</p>
+          <h3>The Adventures We Wrote Together</h3>
+          <p>
+            Every shared road trip, every spontaneous detour, every meal eaten in the warm glow
+            of a window somewhere — these are the pages of the best story I have ever lived.
+            With you, even the ordinary becomes an adventure. Waiting in line becomes a game.
+            A rainy afternoon becomes a masterpiece. You have this gift of turning everything
+            golden simply by being in it.
+          </p>
+        </div>
+      </div>
+
+      <!-- Decorator 3 — Gold line + flower outline -->
+      <div class="svg-decorator" aria-hidden="true">
+        <svg width="240" height="30" viewBox="0 0 240 30" fill="none" xmlns="http://www.w3.org/2000/svg">
+          <defs>
+            <linearGradient id="dg3a" x1="0" y1="0" x2="90" y2="0" gradientUnits="userSpaceOnUse">
+              <stop offset="0%"   stop-color="#C9A84C" stop-opacity="0"/>
+              <stop offset="100%" stop-color="#C9A84C" stop-opacity="0.65"/>
+            </linearGradient>
+            <linearGradient id="dg3b" x1="150" y1="0" x2="240" y2="0" gradientUnits="userSpaceOnUse">
+              <stop offset="0%"   stop-color="#C9A84C" stop-opacity="0.65"/>
+              <stop offset="100%" stop-color="#C9A84C" stop-opacity="0"/>
+            </linearGradient>
+          </defs>
+          <line x1="0"   y1="15" x2="96"  y2="15" stroke="url(#dg3a)" stroke-width="1"/>
+          <!-- Simple 5-petal flower outline -->
+          <circle cx="120" cy="15" r="3"   fill="none" stroke="#C9A84C" stroke-width="1.1" opacity="0.5"/>
+          <circle cx="120" cy="7"  r="2.2" fill="none" stroke="#C9A84C" stroke-width="1"   opacity="0.4"/>
+          <circle cx="120" cy="23" r="2.2" fill="none" stroke="#C9A84C" stroke-width="1"   opacity="0.4"/>
+          <circle cx="112" cy="15" r="2.2" fill="none" stroke="#C9A84C" stroke-width="1"   opacity="0.4"/>
+          <circle cx="128" cy="15" r="2.2" fill="none" stroke="#C9A84C" stroke-width="1"   opacity="0.4"/>
+          <circle cx="113.8" cy="8.8"  r="2" fill="none" stroke="#C9A84C" stroke-width="0.9" opacity="0.3"/>
+          <circle cx="126.2" cy="8.8"  r="2" fill="none" stroke="#C9A84C" stroke-width="0.9" opacity="0.3"/>
+          <circle cx="113.8" cy="21.2" r="2" fill="none" stroke="#C9A84C" stroke-width="0.9" opacity="0.3"/>
+          <circle cx="126.2" cy="21.2" r="2" fill="none" stroke="#C9A84C" stroke-width="0.9" opacity="0.3"/>
+          <line x1="144" y1="15" x2="240" y2="15" stroke="url(#dg3b)" stroke-width="1"/>
+        </svg>
+      </div>
+
+      <!-- Paragraph 4 -->
+      <div class="story-block">
+        <div class="story-card">
+          <p class="para-chapter">Chapter IV</p>
+          <h3>Here, Now, Always</h3>
+          <p>
+            If I could choose one moment to live in forever, it would be any ordinary one with
+            you — your head on my shoulder, that soft half-smile you give when you're trying not
+            to laugh, the weight of your hand in mine. I am not afraid of the future because I
+            know you are in it. And wherever that takes us, I know this: loving you is the
+            greatest thing I have ever done.
+          </p>
+        </div>
+      </div>
+
+    </section><!-- /story-section -->
+
+    <!-- ── Grand Finale ──────────────────────────────────────── -->
+    <section class="finale-section" aria-label="Closing message">
+      <h2 class="finale-title">To you, with everything I have ♡</h2>
+      <p class="finale-body">
+        Thank you for being my person. For the laughter, the late nights, the quiet
+        mornings. For choosing this — choosing <em>us</em> — every single day.
+        You are the best part of every story I will ever live.
+      </p>
+      <button class="surprise-btn" id="surprise-btn" aria-label="Click for a heart confetti surprise">
+        Click for a surprise
+      </button>
+    </section>
+
+  </div><!-- /page-container -->
+
+  <footer class="site-footer">
+    made with <span class="heart-pulse" aria-hidden="true">♥</span> just for you
+  </footer>
+
+</div><!-- /main-content -->
+
+
+<!-- ═══════════════════════════════════════════════════════════════════
+     JAVASCRIPT
+═══════════════════════════════════════════════════════════════════ -->
+<script>
+(function () {
+  'use strict';
+
+  /* ── Tiny helpers ──────────────────────────────────────────────── */
+  const $ = s => document.querySelector(s);
+  const rand    = (a, b) => Math.random() * (b - a) + a;
+  const randInt = (a, b) => Math.floor(rand(a, b));
+  const TAU = Math.PI * 2;
+
+  /* ── DOM refs ──────────────────────────────────────────────────── */
+  const overlay       = $('#intro-overlay');
+  const bloomCanvas   = $('#bloom-canvas');
+  const mainContent   = $('#main-content');
+  const confettiCnv   = $('#confetti-canvas');
+  const surpriseBtn   = $('#surprise-btn');
+
+  /* ════════════════════════════════════════════════════════════════
+     1.  BLOOM INTRO ANIMATION
+  ════════════════════════════════════════════════════════════════ */
+  const bCtx = bloomCanvas.getContext('2d');
+  let bloomParts = [];
+  let bloomTriggered = false;
+
+  function sizeBloomCanvas() {
+    bloomCanvas.width  = window.innerWidth;
+    bloomCanvas.height = window.innerHeight;
+  }
+  sizeBloomCanvas();
+  window.addEventListener('resize', sizeBloomCanvas);
+
+  /* Palette shared between particle types */
+  const bloomPalette = [
+    '#F5D6DF', '#E8B4C0', '#FADADD', '#F4B8C1',
+    '#F5E6B8', '#E6C76A', '#C9A84C', '#EEC9D2',
+    '#D4A0B0', '#F9E4EC',
+  ];
+
+  class BloomParticle {
+    constructor(cx, cy) {
+      const angle = rand(0, TAU);
+      const speed = rand(3.5, 11);
+      this.x   = cx;
+      this.y   = cy;
+      this.vx  = Math.cos(angle) * speed;
+      this.vy  = Math.sin(angle) * speed;
+      this.rot = rand(0, TAU);
+      this.rs  = rand(-0.09, 0.09);
+      this.s   = rand(9, 26);
+      this.col = bloomPalette[randInt(0, bloomPalette.length)];
+      this.life = 0;
+      this.max  = randInt(55, 95);
+      this.type = Math.random() < 0.55 ? 'petal' : 'flower';
+    }
+
+    tick() {
+      this.x   += this.vx;
+      this.y   += this.vy;
+      this.vy  += 0.18;   /* soft gravity */
+      this.vx  *= 0.965;
+      this.rot += this.rs;
+      this.life++;
+    }
+
+    get alpha() { return Math.max(0, 1 - this.life / this.max); }
+    get dead()  { return this.life >= this.max; }
+
+    draw(ctx) {
+      ctx.save();
+      ctx.globalAlpha = this.alpha;
+      ctx.translate(this.x, this.y);
+      ctx.rotate(this.rot);
+      ctx.strokeStyle = this.col;
+      ctx.fillStyle   = this.col + '55';
+      ctx.lineWidth   = 1.4;
+
+      if (this.type === 'petal') {
+        const s = this.s;
+        ctx.beginPath();
+        ctx.moveTo(0, -s);
+        ctx.bezierCurveTo( s * 0.55, -s * 0.55,  s * 0.55, s * 0.55, 0,  s);
+        ctx.bezierCurveTo(-s * 0.55,  s * 0.55, -s * 0.55, -s * 0.55, 0, -s);
+        ctx.fill();
+        ctx.stroke();
+      } else {
+        /* 5-petal flower outline */
+        const r = this.s * 0.45;
+        for (let i = 0; i < 5; i++) {
+          const a = (i / 5) * TAU;
+          ctx.beginPath();
+          ctx.ellipse(
+            Math.cos(a) * r, Math.sin(a) * r,
+            r * 0.52, r * 0.26, a, 0, TAU
+          );
+          ctx.fill();
+          ctx.stroke();
+        }
+        /* centre dot */
+        ctx.beginPath();
+        ctx.arc(0, 0, r * 0.22, 0, TAU);
+        ctx.fillStyle = '#E6C76AAA';
+        ctx.fill();
+      }
+      ctx.restore();
+    }
+  }
+
+  function burst(cx, cy, n = 80) {
+    for (let i = 0; i < n; i++) bloomParts.push(new BloomParticle(cx, cy));
+  }
+
+  function runBloom() {
+    bCtx.clearRect(0, 0, bloomCanvas.width, bloomCanvas.height);
+    bloomParts = bloomParts.filter(p => !p.dead);
+    bloomParts.forEach(p => { p.tick(); p.draw(bCtx); });
+    if (bloomParts.length) requestAnimationFrame(runBloom);
+    else bloomCanvas.style.display = 'none';
+  }
+
+  function triggerBloom() {
+    if (bloomTriggered) return;
+    bloomTriggered = true;
+
+    const cx = bloomCanvas.width  / 2;
+    const cy = bloomCanvas.height / 2;
+
+    burst(cx, cy, 88);
+    setTimeout(() => burst(cx, cy, 70), 160);
+    setTimeout(() => burst(cx, cy, 55), 330);
+
+    requestAnimationFrame(runBloom);
+
+    /* Fade overlay ~600 ms after first burst */
+    setTimeout(() => {
+      overlay.classList.add('fade-out');
+      mainContent.classList.add('visible');
+    }, 620);
+
+    overlay.addEventListener('transitionend', () => {
+      overlay.style.display = 'none';
+    }, { once: true });
+  }
+
+  overlay.addEventListener('click',   triggerBloom);
+  overlay.addEventListener('keydown', e => {
+    if (e.key === 'Enter' || e.key === ' ') triggerBloom();
+  });
+
+  /* ════════════════════════════════════════════════════════════════
+     2.  INTERSECTION OBSERVER — scroll-in animations
+  ════════════════════════════════════════════════════════════════ */
+  const scrollEls = document.querySelectorAll(
+    '.story-block, .svg-decorator, .finale-section'
+  );
+
+  /* Stagger story blocks slightly */
+  document.querySelectorAll('.story-block').forEach((el, i) => {
+    el.style.transitionDelay = `${i * 0.05}s`;
+  });
+
+  const scrollObs = new IntersectionObserver(entries => {
+    entries.forEach(e => {
+      if (e.isIntersecting) {
+        e.target.classList.add('in-view');
+        scrollObs.unobserve(e.target);
+      }
+    });
+  }, { threshold: 0.12, rootMargin: '0px 0px -36px 0px' });
+
+  scrollEls.forEach(el => scrollObs.observe(el));
+
+  /* ════════════════════════════════════════════════════════════════
+     3.  HEART CONFETTI
+  ════════════════════════════════════════════════════════════════ */
+  const cCtx  = confettiCnv.getContext('2d');
+  let pieces  = [];
+  let active  = false;
+  let animId  = null;
+  let spawnId = null;
+
+  function sizeCnv() {
+    confettiCnv.width  = window.innerWidth;
+    confettiCnv.height = window.innerHeight;
+  }
+  sizeCnv();
+  window.addEventListener('resize', sizeCnv);
+
+  const heartCols = [
+    '#F5D6DF', '#E8B4C0', '#D4809A', '#C98BA0',
+    '#F4B8C1', '#FADADD', '#E6C76A', '#C9A84C',
+    '#EEC9D2', '#F9C6D0',
+  ];
+
+  class Heart {
+    constructor(fromTop = true) {
+      this.reset(fromTop);
+    }
+    reset(fromTop = true) {
+      this.x      = rand(0, confettiCnv.width);
+      this.y      = fromTop ? rand(-70, -5) : rand(-200, confettiCnv.height * 0.6);
+      this.s      = rand(9, 21);
+      this.vy     = rand(1.6, 4.2);
+      this.vx     = rand(-1.3, 1.3);
+      this.rot    = rand(0, TAU);
+      this.rs     = rand(-0.06, 0.06);
+      this.alpha  = rand(0.65, 1);
+      this.wob    = rand(0, TAU);
+      this.wobSpd = rand(0.022, 0.065);
+      this.col    = heartCols[randInt(0, heartCols.length)];
+    }
+    tick() {
+      this.y   += this.vy;
+      this.wob += this.wobSpd;
+      this.x   += this.vx + Math.sin(this.wob) * 0.9;
+      this.rot += this.rs;
+      if (this.y > confettiCnv.height + 40) this.reset(true);
+    }
+    draw(ctx) {
+      ctx.save();
+      ctx.globalAlpha = this.alpha;
+      ctx.translate(this.x, this.y);
+      ctx.rotate(this.rot);
+      ctx.fillStyle   = this.col;
+      ctx.strokeStyle = this.col + 'BB';
+      ctx.lineWidth   = 0.5;
+      const s = this.s;
+      ctx.beginPath();
+      ctx.moveTo(0, s * 0.32);
+      ctx.bezierCurveTo(-s, -s * 0.28, -s, -s * 0.82, 0, -s * 0.38);
+      ctx.bezierCurveTo( s, -s * 0.82,  s, -s * 0.28, 0,  s * 0.32);
+      ctx.fill();
+      ctx.stroke();
+      ctx.restore();
+    }
+  }
+
+  function spawnBatch(n = 7) {
+    for (let i = 0; i < n; i++) pieces.push(new Heart(true));
+  }
+
+  function loopConfetti() {
+    cCtx.clearRect(0, 0, confettiCnv.width, confettiCnv.height);
+    pieces.forEach(p => { p.tick(); p.draw(cCtx); });
+    if (active) animId = requestAnimationFrame(loopConfetti);
+  }
+
+  function startConfetti() {
+    active = true;
+    confettiCnv.style.opacity = '1';
+    /* Initial spread across full screen for instant joy */
+    for (let i = 0; i < 70; i++) pieces.push(new Heart(false));
+    spawnId = setInterval(() => spawnBatch(8), 380);
+    animId  = requestAnimationFrame(loopConfetti);
+    /* Auto-stop after 9 s */
+    setTimeout(stopConfetti, 9000);
+  }
+
+  function stopConfetti() {
+    active = false;
+    clearInterval(spawnId);
+    confettiCnv.style.opacity = '0';
+    setTimeout(() => {
+      cCtx.clearRect(0, 0, confettiCnv.width, confettiCnv.height);
+      pieces = [];
+      cancelAnimationFrame(animId);
+    }, 450);
+  }
+
+  surpriseBtn.addEventListener('click', () => {
+    active ? stopConfetti() : startConfetti();
+  });
+
+})();
+</script>
+
+</body>
+</html>
