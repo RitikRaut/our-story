@@ -1046,13 +1046,13 @@
     } catch (_) { /* silently skip if Web Audio unavailable */ }
   }
 
-  /* ── Background music — SoundCloud (Dandelions · Ruth B, no ads) ── */
+  /* ── Background music — local MP3, full song, loops, no ads ── */
+  const bgAudio = new Audio('dandelions.mp3');
+  bgAudio.loop   = true;
+  bgAudio.volume = 0.55;
+
   function startBgMusic() {
-    const f = document.createElement('iframe');
-    f.src = 'https://w.soundcloud.com/player/?url=https%3A//soundcloud.com/ruthbofficial/dandelions&auto_play=true&hide_related=true&show_comments=false&show_user=false&show_reposts=false&show_teaser=false&visual=false';
-    f.allow = 'autoplay';
-    f.style.cssText = 'position:fixed;width:1px;height:1px;bottom:0;left:0;opacity:0;pointer-events:none;border:0;';
-    document.body.appendChild(f);
+    bgAudio.play().catch(() => {/* autoplay blocked — user can retry by tapping again */});
   }
 
   function triggerBloom() {
